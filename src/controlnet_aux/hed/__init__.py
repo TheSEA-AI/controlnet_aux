@@ -103,7 +103,7 @@ class HEDdetector:
             edges = self.netNetwork(image_hed)
             edges = [e.detach().cpu().numpy().astype(np.float32)[0, 0] for e in edges]
             edges = [cv2.resize(e, (W, H), interpolation=cv2.INTER_LINEAR) for e in edges]
-            edges = np.stack(edges, axis=2)
+            edges = np.stack(edges[:3], axis=2)
             edge = 1 / (1 + np.exp(-np.mean(edges, axis=2).astype(np.float64)))
             if safe:
                 edge = safe_step(edge)
