@@ -79,7 +79,7 @@ class HEDdetector:
         self.netNetwork.to(device)
         return self
     
-    def __call__(self, input_image, detect_resolution=512, image_resolution=512, safe=False, output_type="pil", scribble=False, **kwargs):
+    def __call__(self, input_image, detect_resolution=512, image_resolution=512, safe=False, enhance=False, output_type="pil", scribble=False, **kwargs):
         if "return_pil" in kwargs:
             warnings.warn("return_pil is deprecated. Use output_type instead.", DeprecationWarning)
             output_type = "pil" if kwargs["return_pil"] else "np"
@@ -103,17 +103,22 @@ class HEDdetector:
             edges = self.netNetwork(image_hed)
             edges = [e.detach().cpu().numpy().astype(np.float32)[0, 0] for e in edges]
             edges = [cv2.resize(e, (W, H), interpolation=cv2.INTER_LINEAR) for e in edges]
-            edges_add = np.stack(edges[:2], axis=2)
+            if enhance:
+                edges_add = np.stack(edges[:2], axis=2)
             edges = np.stack(edges, axis=2)
-            edge_add = 1 / (1 + np.exp(-np.mean(edges_add, axis=2).astype(np.float64)))
+            if enhance:
+                edge_add = 1 / (1 + np.exp(-np.mean(edges_add, axis=2).astype(np.float64)))
             edge = 1 / (1 + np.exp(-np.mean(edges, axis=2).astype(np.float64)))
             if safe:
-                edge_add = safe_step(edge_add)
+                if enhance:
+                    edge_add = safe_step(edge_add)
                 edge = safe_step(edge)
-            edge_add = (edge_add * 255.0).clip(0, 255).astype(np.uint8)
+            if enhance:
+                edge_add = (edge_add * 255.0).clip(0, 255).astype(np.uint8)
             edge = (edge * 255.0).clip(0, 255).astype(np.uint8)
-            edge = edge + edge_add
-            edge = edge.clip(0, 255)
+            if enhance:
+                edge = edge + edge_add
+                edge = edge.clip(0, 255)
 
         detected_map = edge
         detected_map = HWC3(detected_map)
