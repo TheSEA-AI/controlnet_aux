@@ -123,8 +123,8 @@ class HEDdetector:
         detected_map = edge
         detected_map = HWC3(detected_map)
 
-        img = resize_image(input_image, image_resolution)
-        H, W, C = img.shape
+        #img = resize_image(input_image, image_resolution)
+        H, W, C = input_image.shape
 
         detected_map = cv2.resize(detected_map, (W, H), interpolation=cv2.INTER_LINEAR)
         
