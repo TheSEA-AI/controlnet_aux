@@ -93,6 +93,7 @@ class HEDdetector:
             input_image = np.array(input_image, dtype=np.uint8)
 
         input_image = HWC3(input_image)
+        H_original, W_original, _ = input_image.shape
         input_image = resize_image(input_image, detect_resolution)
 
         assert input_image.ndim == 3
@@ -124,9 +125,10 @@ class HEDdetector:
         detected_map = HWC3(detected_map)
 
         #img = resize_image(input_image, image_resolution)
-        H, W, C = input_image.shape
+        #H, W, C = input_image.shape
 
-        detected_map = cv2.resize(detected_map, (W, H), interpolation=cv2.INTER_LINEAR)
+        #detected_map = cv2.resize(detected_map, (W, H), interpolation=cv2.INTER_LINEAR)
+        detected_map = cv2.resize(detected_map, (W_original, H_original), interpolation=cv2.INTER_LINEAR)
         
         if scribble:
             detected_map = nms(detected_map, 127, 3.0)
