@@ -79,7 +79,7 @@ class HEDdetector:
         self.netNetwork.to(device)
         return self
     
-    def __call__(self, input_image, detect_resolution=512, image_resolution=512, safe=False, enhance=False, output_type="pil", scribble=False, **kwargs):
+    def __call__(self, input_image, detect_resolution=512, image_resolution=None, safe=False, enhance=False, output_type="pil", scribble=False, **kwargs):
         if "return_pil" in kwargs:
             warnings.warn("return_pil is deprecated. Use output_type instead.", DeprecationWarning)
             output_type = "pil" if kwargs["return_pil"] else "np"
@@ -128,8 +128,11 @@ class HEDdetector:
         #H, W, C = input_image.shape
 
         #detected_map = cv2.resize(detected_map, (W, H), interpolation=cv2.INTER_LINEAR)
-        detected_map = cv2.resize(detected_map, (W_original, H_original), interpolation=cv2.INTER_LINEAR)
-        
+        if image_resolution is None:
+            detected_map = cv2.resize(detected_map, (W_original, H_original), interpolation=cv2.INTER_LINEAR)
+        else:
+            detected_map = cv2.resize(detected_map, (image_resolution, image_resolution), interpolation=cv2.INTER_LINEAR)
+
         if scribble:
             detected_map = nms(detected_map, 127, 3.0)
             detected_map = cv2.GaussianBlur(detected_map, (0, 0), 3.0)
