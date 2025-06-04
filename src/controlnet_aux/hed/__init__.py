@@ -115,6 +115,7 @@ class HEDdetector:
                     edge_add = safe_step(edge_add)
                 edge = safe_step(edge)
             if enhance:
+                edge_add = (edge_add - min(edge_add)) / (max(edge_add) - min(edge_add)) 
                 edge_add = (edge_add * 255.0).clip(0, 255).astype(np.uint8)
             edge = (edge * 255.0).clip(0, 255).astype(np.uint8)
             if enhance:
