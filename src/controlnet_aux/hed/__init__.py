@@ -79,7 +79,7 @@ class HEDdetector:
         self.netNetwork.to(device)
         return self
     
-    def __call__(self, input_image, detect_resolution=512, image_resolution=None, safe=False, enhance=False, output_type="pil", scribble=False, **kwargs):
+    def __call__(self, input_image, detect_resolution=512, image_resolution=None, safe=False, enhance=False, strength=1.0, output_type="pil", scribble=False, **kwargs):
         if "return_pil" in kwargs:
             warnings.warn("return_pil is deprecated. Use output_type instead.", DeprecationWarning)
             output_type = "pil" if kwargs["return_pil"] else "np"
@@ -108,7 +108,7 @@ class HEDdetector:
                 edges_add = np.stack(edges[:2], axis=2)
             edges = np.stack(edges, axis=2)
             if enhance:
-                edge_add = 1 / (1 + np.exp(-np.mean(edges_add, axis=2).astype(np.float64)))
+                edge_add = 1 / (1 + strength * np.exp(-np.mean(edges_add, axis=2).astype(np.float64)))
             edge = 1 / (1 + np.exp(-np.mean(edges, axis=2).astype(np.float64)))
             if safe:
                 if enhance:
