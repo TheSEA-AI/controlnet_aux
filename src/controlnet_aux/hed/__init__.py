@@ -105,10 +105,12 @@ class HEDdetector:
             edges = [e.detach().cpu().numpy().astype(np.float32)[0, 0] for e in edges]
             edges = [cv2.resize(e, (W, H), interpolation=cv2.INTER_LINEAR) for e in edges]
             if enhance:
-                edges_add = np.stack(edges[:2], axis=2)
+                #edges_add = np.stack(edges[:2], axis=2)
+                edges_add = edges[0]
             edges = np.stack(edges, axis=2)
             if enhance:
-                edge_add = 1 / (1 + np.exp(-np.mean(edges_add, axis=2).astype(np.float64)))
+                #edge_add = 1 / (1 + np.exp(-np.mean(edges_add, axis=2).astype(np.float64)))
+                edge_add = 1 / (1 + np.exp(-edges_add.astype(np.float64)))
             edge = 1 / (1 + np.exp(-np.mean(edges, axis=2).astype(np.float64)))
             if safe:
                 if enhance:
