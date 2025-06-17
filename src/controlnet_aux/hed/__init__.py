@@ -88,6 +88,9 @@ class HEDdetector:
             if output_type:
                 output_type = "pil"
 
+        input_image = input_image.convert("RGBA")
+        _, _, _, alpha = input_image.split()
+
         device = next(iter(self.netNetwork.parameters())).device
         if not isinstance(input_image, np.ndarray):
             input_image = np.array(input_image, dtype=np.uint8)
@@ -142,5 +145,7 @@ class HEDdetector:
 
         if output_type == "pil":
             detected_map = Image.fromarray(detected_map)
+
+            detected_map.putalpha(alpha)
 
         return detected_map
