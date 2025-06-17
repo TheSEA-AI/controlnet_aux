@@ -145,6 +145,7 @@ class HEDdetector:
 
         if output_type == "pil":
             detected_map = Image.fromarray(detected_map)
+            detected_map = detected_map.convert("RGBA")
 
             detected_map.putalpha(alpha)
 
