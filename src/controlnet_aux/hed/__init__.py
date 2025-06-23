@@ -147,8 +147,6 @@ class HEDdetector:
             detected_map = Image.fromarray(detected_map)
             detected_map = detected_map.convert("RGBA")
 
-            print(f'detected_map.size = {detected_map.size}')
-            print(f'alpha.size = {alpha.size}')
             detected_map.putalpha(alpha)
 
         return detected_map
