@@ -136,7 +136,7 @@ class HEDdetector:
             detected_map = cv2.resize(detected_map, (W_original, H_original), interpolation=cv2.INTER_LINEAR)
         else:
             detected_map = cv2.resize(detected_map, (image_resolution, image_resolution), interpolation=cv2.INTER_LINEAR)
-            alpha = alpha.resize(detected_map.size, resample=Image.BILINEAR)
+            alpha = alpha.resize((image_resolution, image_resolution), resample=Image.BILINEAR)
 
         if scribble:
             detected_map = nms(detected_map, 127, 3.0)
